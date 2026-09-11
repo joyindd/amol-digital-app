@@ -96,11 +96,24 @@ whole quotation into a bill.
 cheque, or money that landed in your personal account. Balance updates
 immediately.
 
-**Who owes me** — every unpaid bill, oldest and largest first, split into
-0-30 / 31-60 / 61-90 / 90+ days. Each row has a **Remind** button that opens
-WhatsApp with a Marathi reminder already written.
+**Recovery** — the collection desk. Total money outside at the top, split into
+0-30 / 31-60 / 61-90 / 90+ days, plus two filters that matter: **Follow-up
+due** (they promised to pay by a date that has arrived) and **Never chased**.
+Sort by oldest or by largest. Each row does four things without leaving the
+screen:
 
-**Customers** — everyone, with total billed, total received and balance.
+- **Remind** opens WhatsApp with a Marathi reminder already written, and
+  records that you chased them
+- **Payment** records money against that bill
+- **Promise** stores the date they said they would pay, with a note. The row
+  turns yellow on that date and appears under Follow-up due
+- **History** shows every chase, promise and payment on that bill
+
+**Customers** — everyone with billed, received and balance. Click a name for
+the **statement**: every bill and payment on one running balance, a
+**Copy statement** / **Send on WhatsApp** button for disputes, and a
+**Collect money** box that takes one amount and splits it across their open
+bills, oldest first. Anything left over is held as an advance.
 
 **Rate card** — change a rate and every new quotation uses it. Bills already
 raised keep the rate they were made with.

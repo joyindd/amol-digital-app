@@ -16,6 +16,7 @@ for the app to work — this folder exists so the structure is written down.
 | `quotations` + `quotation_lines` | quotations |
 | `invoices` + `invoice_lines` | bills. Lines are **copied** from the quotation, never linked, so changing a rate later never changes an old bill |
 | `payments` | money received, by mode (cash, bank, UPI, cheque, personal account) |
+| `recovery_events` | every chase, promise, call and visit against a bill |
 | `doc_counters` | the running number per financial year |
 
 ## Views
@@ -23,6 +24,11 @@ for the app to work — this folder exists so the structure is written down.
 - `v_receivables` — every unpaid bill with balance, age in days and a
   0-30 / 31-60 / 61-90 / 90+ bucket. This is the "Who owes me" screen.
 - `v_customer_balance` — billed, received and outstanding per customer.
+- `v_customer_ledger` — bills and payments merged into one dated list, used by
+  the customer statement screen.
+
+Invoices also carry `follow_up_date`, `follow_up_note`, `last_reminded_at` and
+`reminder_count`, which drive the Recovery screen's filters.
 
 ## Functions
 

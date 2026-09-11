@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { supabase, getOrg } from '../../lib/db';
 import { money, num, fmtDate } from '../../lib/calc';
 
@@ -76,7 +77,7 @@ export default function CustomersPage() {
             <tbody>
               {shown.map((r) => (
                 <tr key={r.customer_id}>
-                  <td>{r.name}</td>
+                  <td><Link href={`/customers/${r.customer_id}`}>{r.name}</Link></td>
                   <td>{r.phone || ''}</td>
                   <td className="right">{money(r.total_billed)}</td>
                   <td className="right">{money(r.total_received)}</td>

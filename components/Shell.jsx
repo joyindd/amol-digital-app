@@ -8,7 +8,7 @@ import { supabase } from '../lib/db';
 const NAV = [
   { href: '/quotations', label: 'Quotations' },
   { href: '/invoices', label: 'Bills' },
-  { href: '/receivables', label: 'Who owes me' },
+  { href: '/receivables', label: 'Recovery' },
   { href: '/customers', label: 'Customers' },
   { href: '/rates', label: 'Rate card' },
 ];

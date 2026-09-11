@@ -33,10 +33,35 @@ export default function DocList({ kind }) {
     return s.includes(q.toLowerCase());
   });
 
+  const thisMonth = rows.filter((r) => (r[dateCol] || '').slice(0, 7) === new Date().toISOString().slice(0, 7));
+  const billedMonth = thisMonth.reduce((t, r) => t + num(r.grand_total), 0);
+  const outstanding = isInv ? rows.reduce((t, r) => t + (num(r.grand_total) - num(r.paid_amount)), 0) : 0;
+
   return (
     <div className="shell">
       <h1 className="page">{title}</h1>
       {err && <div className="err">{err}</div>}
+
+      {isInv && !loading && (
+        <section className="card">
+          <div className="grid g3">
+            <div>
+              <div className="note" style={{ margin: 0 }}>Billed this month</div>
+              <div style={{ fontSize: 24, fontWeight: 700 }}>{money(billedMonth)}</div>
+            </div>
+            <div>
+              <div className="note" style={{ margin: 0 }}>Bills this month</div>
+              <div style={{ fontSize: 24, fontWeight: 700 }}>{thisMonth.length}</div>
+            </div>
+            <div>
+              <div className="note" style={{ margin: 0 }}>Still outstanding</div>
+              <div style={{ fontSize: 24, fontWeight: 700, color: outstanding > 0.5 ? 'var(--red)' : 'var(--ok)' }}>
+                {money(outstanding)}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       <div className="btnrow" style={{ marginBottom: 14 }}>
         <Link className="btn" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }} href={`${path}/new`}>
