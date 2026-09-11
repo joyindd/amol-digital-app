@@ -1,0 +1,85 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { supabase } from '../lib/db';
+import { money, fmtDate, num } from '../lib/calc';
+
+export default function DocList({ kind }) {
+  const isInv = kind === 'invoice';
+  const table = isInv ? 'invoices' : 'quotations';
+  const noCol = isInv ? 'invoice_no' : 'quote_no';
+  const dateCol = isInv ? 'invoice_date' : 'quote_date';
+  const path = isInv ? '/invoices' : '/quotations';
+  const title = isInv ? 'Bills' : 'Quotations';
+
+  const [rows, setRows] = useState([]);
+  const [q, setQ] = useState('');
+  const [err, setErr] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const { data, error } = await supabase()
+        .from(table).select('*').order(dateCol, { ascending: false }).limit(200);
+      if (error) setErr(error.message);
+      setRows(data || []);
+      setLoading(false);
+    })();
+  }, [table, dateCol]);
+
+  const shown = rows.filter((r) => {
+    const s = (r.customer_name + ' ' + r[noCol]).toLowerCase();
+    return s.includes(q.toLowerCase());
+  });
+
+  return (
+    <div className="shell">
+      <h1 className="page">{title}</h1>
+      {err && <div className="err">{err}</div>}
+
+      <div className="btnrow" style={{ marginBottom: 14 }}>
+        <Link className="btn" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }} href={`${path}/new`}>
+          + New {isInv ? 'bill' : 'quotation'}
+        </Link>
+        <input style={{ maxWidth: 280 }} placeholder="Search name or number" value={q} onChange={(e) => setQ(e.target.value)} />
+      </div>
+
+      <section className="card">
+        {loading ? <p className="note">Loading…</p> : shown.length === 0 ? (
+          <p className="note">Nothing here yet.</p>
+        ) : (
+          <table className="list">
+            <thead>
+              <tr>
+                <th>Number</th><th>Date</th><th>Customer</th>
+                <th className="right">Total</th>
+                {isInv && <th className="right">Balance</th>}
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shown.map((r) => {
+                const bal = num(r.grand_total) - num(r.paid_amount);
+                return (
+                  <tr key={r.id} style={{ cursor: 'pointer' }} onClick={() => { window.location.href = `${path}/${r.id}`; }}>
+                    <td><Link href={`${path}/${r.id}`}>{r[noCol]}</Link></td>
+                    <td>{fmtDate(r[dateCol])}</td>
+                    <td>{r.customer_name || '-'}</td>
+                    <td className="right">{money(r.grand_total)}</td>
+                    {isInv && <td className="right">{money(bal)}</td>}
+                    <td>
+                      <span className={'tag ' + (isInv ? (bal <= 0.5 ? 'paid' : num(r.paid_amount) > 0 ? 'part' : 'due') : '')}>
+                        {r.status}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </section>
+    </div>
+  );
+}
