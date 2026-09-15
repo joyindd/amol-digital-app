@@ -109,7 +109,34 @@ screen:
   turns yellow on that date and appears under Follow-up due
 - **History** shows every chase, promise and payment on that bill
 
-**Customers** — everyone with billed, received and balance. Click a name for
+**Dashboard** — outstanding split into checked and unchecked, open bill count,
+billed / received / spent this month, money sitting on account, the four ageing
+buckets, the ten biggest debtors and the last six months. Everything is read
+live from the database, so it moves the moment a record changes. The
+**Export everything to Excel** button here writes one workbook with eleven
+sheets: customers, bills, bill lines, collections, allocations, expenses,
+outstanding, the full ledger, quotations, rate card and a month summary.
+
+**Collections** — every receipt in one editable grid. Click a box, change it,
+click away; it saves. The top row adds a new one. Leave the customer's bill
+blank for money taken on account and attach it later from their statement.
+
+**Expenses** — flex rolls, ink, frames, vendor payments, fuel, labour, rent.
+Same grid, with a GST column so the CA can claim what is claimable.
+
+**Old bills to check** — the queue for everything imported from the old books.
+Each row has three answers: **Money received** (closes it and records the cash),
+**Still due** (confirms it and sends it to Recovery), or **More…** for a part
+payment or a write-off. Until a bill is checked it is deliberately kept out of
+the Recovery total, so the figure on the Recovery screen is always money you
+have actually confirmed is owed.
+
+A write-off is recorded as an adjustment entry rather than a deletion, so the
+bill and the decision both stay visible, and the CA can tell written-off money
+apart from collected money.
+
+**Customers** — an editable master (name, Marathi name, mobile, place, group,
+GST number) over the balance list. Click a name for the statement. Click a name for
 the **statement**: every bill and payment on one running balance, a
 **Copy statement** / **Send on WhatsApp** button for disputes, and a
 **Collect money** box that takes one amount and splits it across their open

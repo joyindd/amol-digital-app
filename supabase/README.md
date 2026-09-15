@@ -28,7 +28,13 @@ for the app to work — this folder exists so the structure is written down.
   the customer statement screen.
 
 Invoices also carry `follow_up_date`, `follow_up_note`, `last_reminded_at` and
-`reminder_count`, which drive the Recovery screen's filters.
+`reminder_count`, which drive the Recovery screen's filters, plus `is_legacy`,
+`verify_status`, `verified_at`, `verified_by` and `verify_note` for checking
+imported bills against the owner's memory.
+
+`settle_invoice(invoice, action, amount, date, note, mode)` does a check in one
+call — the money entry, the status change and the history line together.
+Actions: `received`, `pending`, `writeoff`.
 
 ## Functions
 

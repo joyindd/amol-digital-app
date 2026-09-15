@@ -44,9 +44,10 @@ export default function RecoveryPage() {
   }
 
   const totals = useMemo(() => {
-    const t = { all: 0, '0-30': 0, '31-60': 0, '61-90': 0, '90+': 0, due: 0, never: 0 };
+    const t = { all: 0, '0-30': 0, '31-60': 0, '61-90': 0, '90+': 0, due: 0, never: 0, unchecked: 0, uncheckedCount: 0 };
     rows.forEach((r) => {
       const b = num(r.balance);
+      if (r.verify_status === 'unverified') { t.unchecked += b; t.uncheckedCount += 1; return; }
       t.all += b;
       t[r.bucket] = (t[r.bucket] || 0) + b;
       if (r.follow_up_due) t.due += b;
@@ -56,7 +57,7 @@ export default function RecoveryPage() {
   }, [rows]);
 
   const shown = useMemo(() => {
-    let list = rows.slice();
+    let list = rows.slice().filter((r) => r.verify_status !== 'unverified');
     if (view === 'due') list = list.filter((r) => r.follow_up_due);
     else if (view === 'never') list = list.filter((r) => !r.last_reminded_at);
     else if (BUCKETS.includes(view)) list = list.filter((r) => r.bucket === view);
@@ -154,10 +155,19 @@ export default function RecoveryPage() {
 
       <section className="card">
         <h2>Money outside <span>येणे बाकी</span></h2>
-        <div style={{ fontSize: 36, fontWeight: 700, letterSpacing: '-.02em', marginBottom: 14 }}>
+        <div style={{ fontSize: 36, fontWeight: 700, letterSpacing: '-.02em', marginBottom: 6 }}>
           {money(totals.all)}
-          <span className="note" style={{ display: 'inline', marginLeft: 10, fontSize: 14 }}>across {rows.length} bills</span>
+          <span className="note" style={{ display: 'inline', marginLeft: 10, fontSize: 14 }}>
+            confirmed, across {shown.length} bills
+          </span>
         </div>
+        {totals.uncheckedCount > 0 && (
+          <p className="note" style={{ marginTop: 0, marginBottom: 12 }}>
+            Another <b>{money(totals.unchecked)}</b> across {totals.uncheckedCount} old bills has not been checked
+            with the owner yet, so it is kept out of this figure.{' '}
+            <Link href="/verify">Go through them</Link>
+          </p>
+        )}
         <div className="btnrow">
           {tile('All', totals.all, 'all')}
           {BUCKETS.map((b) => tile(b + ' days', totals[b] || 0, b))}

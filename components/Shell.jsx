@@ -6,9 +6,13 @@ import Link from 'next/link';
 import { supabase } from '../lib/db';
 
 const NAV = [
+  { href: '/dashboard', label: 'Dashboard' },
   { href: '/quotations', label: 'Quotations' },
   { href: '/invoices', label: 'Bills' },
   { href: '/receivables', label: 'Recovery' },
+  { href: '/verify', label: 'Old bills to check' },
+  { href: '/collections', label: 'Collections' },
+  { href: '/expenses', label: 'Expenses' },
   { href: '/customers', label: 'Customers' },
   { href: '/rates', label: 'Rate card' },
 ];

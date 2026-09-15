@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '../lib/db';
+import EditableTable from './EditableTable';
 import { money, fmtDate, num } from '../lib/calc';
 
 export default function DocList({ kind }) {
@@ -69,6 +70,36 @@ export default function DocList({ kind }) {
         </Link>
         <input style={{ maxWidth: 280 }} placeholder="Search name or number" value={q} onChange={(e) => setQ(e.target.value)} />
       </div>
+
+      {isInv && (
+        <section className="card">
+          <h2>Quick edit <span>header fields — open a bill to change its lines</span></h2>
+          <EditableTable
+            table="invoices"
+            select="id,invoice_no,invoice_date,customer_name,customer_phone,discount,extra_charge,grand_total,paid_amount,verify_status,notes,created_at"
+            order={{ column: 'invoice_date', ascending: false }}
+            searchKeys={['invoice_no', 'customer_name']}
+            columns={[
+              { key: 'invoice_no', label: 'Bill no.', type: 'text', width: 150 },
+              { key: 'invoice_date', label: 'Date', type: 'date', width: 140 },
+              { key: 'customer_name', label: 'Customer', type: 'text', width: 200 },
+              { key: 'customer_phone', label: 'Phone', type: 'text', width: 130 },
+              { key: 'discount', label: 'Discount', type: 'number', align: 'right', width: 100 },
+              { key: 'extra_charge', label: 'Fitting', type: 'number', align: 'right', width: 100 },
+              { key: 'grand_total', label: 'Total', type: 'readonly', align: 'right', width: 110,
+                render: (r) => <span className="ro" style={{ textAlign: 'right' }}>{money(r.grand_total)}</span> },
+              { key: 'paid_amount', label: 'Paid', type: 'readonly', align: 'right', width: 110,
+                render: (r) => <span className="ro" style={{ textAlign: 'right' }}>{money(r.paid_amount)}</span> },
+              { key: 'verify_status', label: 'Checked', type: 'select', width: 140,
+                options: [{ v: 'open', l: 'Confirmed due' }, { v: 'unverified', l: 'Not checked' },
+                          { v: 'settled', l: 'Settled' }, { v: 'written_off', l: 'Written off' }] },
+              { key: 'notes', label: 'Note', type: 'text' },
+              { key: 'id', label: 'Open', type: 'readonly', width: 80,
+                render: (r) => <Link href={`/invoices/${r.id}`}>Open</Link> },
+            ]}
+          />
+        </section>
+      )}
 
       <section className="card">
         {loading ? <p className="note">Loading…</p> : shown.length === 0 ? (
